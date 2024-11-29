@@ -9,5 +9,4 @@ import Foundation
 
 enum CacheKey: String {
     case isMock = "isMock"
-    case needRefresh = "needRefresh"
 }

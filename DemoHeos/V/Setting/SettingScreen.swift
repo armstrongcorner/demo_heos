@@ -21,8 +21,8 @@ struct SettingScreen: View {
                     .onChange(of: isMock) { _, newValue in
                         // Use local json data or not
                         UserDefaults.standard.set(newValue, forKey: CacheKey.isMock.rawValue)
-                        // Refresh the data if change
-                        UserDefaults.standard.set(true, forKey: CacheKey.needRefresh.rawValue)
+                        // Notify the data changed
+                        NotificationCenter.default.post(name: .isDataSourceChanged, object: true)
                     }
             }
             .listStyle(.automatic)
@@ -34,5 +34,5 @@ struct SettingScreen: View {
 
 #Preview {
 //    SettingScreen(isMock: true)
-    SettingScreen()
+    SettingScreen(isMock: false)
 }

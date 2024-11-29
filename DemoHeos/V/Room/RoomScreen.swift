@@ -9,7 +9,6 @@ import SwiftUI
 
 struct RoomScreen: View {
     @State private var path: [Route] = []
-    @State private var isFirstLoad: Bool = true
     @State private var initialVM: InitialViewModelProtocol
     @State private var playVM: PlayViewModelProtocol
     @State private var selectedDevice: Device?
@@ -98,14 +97,15 @@ struct RoomScreen: View {
                 }
             }
             .onAppear() {
-                if isFirstLoad {
+                if initialVM.refreshData {
                     // Force retrive when app launch
                     fetchInitData(forceFetch: true)
-                    isFirstLoad = false
-                } else if UserDefaults.standard.bool(forKey: CacheKey.needRefresh.rawValue) {
-                    // Do retrieve as needed
-                    fetchInitData()
+                    initialVM.refreshData = false
                 }
+//                else if UserDefaults.standard.bool(forKey: CacheKey.needRefresh.rawValue) {
+//                    // Do retrieve as needed
+//                    fetchInitData()
+//                }
             }
         }
         .tint(.black)
@@ -114,12 +114,12 @@ struct RoomScreen: View {
     
     private func fetchInitData(forceFetch: Bool = false) {
         Task {
-            if forceFetch || UserDefaults.standard.bool(forKey: CacheKey.needRefresh.rawValue) {
+//            if forceFetch || UserDefaults.standard.bool(forKey: CacheKey.needRefresh.rawValue) {
                 selectedDevice = nil
                 await initialVM.fetchInitialData()
                 playVM.initializePlayStates(with: initialVM.devices)
-                UserDefaults.standard.set(false, forKey: CacheKey.needRefresh.rawValue)
-            }
+//                UserDefaults.standard.set(false, forKey: CacheKey.needRefresh.rawValue)
+//            }
         }
     }
 }
@@ -141,16 +141,20 @@ final class MockInitialViewModel: InitialViewModelProtocol {
     var playingItems: [NowPlayingItem]
     var errorMessage: String?
     var isLoading: Bool
+    var refreshData: Bool
     
-    init(devices: [Device] = [],
-         playingItems: [NowPlayingItem] = [],
-         errorMessage: String? = nil,
-         isLoading: Bool = true)
-    {
+    init(
+        devices: [Device] = [],
+        playingItems: [NowPlayingItem] = [],
+        errorMessage: String? = nil,
+        isLoading: Bool = true,
+        refreshData: Bool = false
+    ) {
         self.devices = devices
         self.playingItems = playingItems
         self.errorMessage = errorMessage
         self.isLoading = isLoading
+        self.refreshData = refreshData
     }
     
     func fetchInitialData() async {

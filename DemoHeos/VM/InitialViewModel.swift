@@ -6,6 +6,11 @@
 //
 
 import Foundation
+import Combine
+
+extension Notification.Name {
+    static let isDataSourceChanged = Notification.Name("isDataSourceChanged")
+}
 
 @MainActor
 protocol InitialViewModelProtocol: Sendable {
@@ -13,6 +18,7 @@ protocol InitialViewModelProtocol: Sendable {
     var playingItems: [NowPlayingItem] { get }
     var errorMessage: String? { get }
     var isLoading: Bool { get }
+    var refreshData: Bool { get set }
     
     func fetchInitialData() async
 }
@@ -23,6 +29,9 @@ final class InitialViewModel: ObservableObject, InitialViewModelProtocol {
     var playingItems: [NowPlayingItem]
     var errorMessage: String?
     var isLoading: Bool
+    var refreshData: Bool
+    
+    private var cancellables: Set<AnyCancellable> = []
     
     private let deviceService: DeviceServiceProtocol
     private let playService: PlayServiceProtocol
@@ -33,6 +42,7 @@ final class InitialViewModel: ObservableObject, InitialViewModelProtocol {
         playingItems: [NowPlayingItem] = [],
         errorMessage: String? = nil,
         isLoading: Bool = false,
+        refreshData: Bool = true,
         deviceService: DeviceServiceProtocol = DeviceService(),
         playService: PlayServiceProtocol = PlayService(),
         fileService: FileServiceProtocol = FileService()
@@ -41,9 +51,18 @@ final class InitialViewModel: ObservableObject, InitialViewModelProtocol {
         self.playingItems = playingItems
         self.errorMessage = errorMessage
         self.isLoading = isLoading
+        self.refreshData = refreshData
         self.deviceService = deviceService
         self.playService = playService
         self.fileService = fileService
+        
+        // Listen to the notification
+        NotificationCenter.default.publisher(for: .isDataSourceChanged)
+            .compactMap { $0.object as? Bool }
+            .sink { [weak self] isDataSourceChanged in
+                self?.refreshData = isDataSourceChanged
+            }
+            .store(in: &cancellables)
     }
     
     func fetchInitialData() async {
