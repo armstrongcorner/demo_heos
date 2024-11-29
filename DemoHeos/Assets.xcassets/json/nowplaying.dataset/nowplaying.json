@@ -1,0 +1,21 @@
+{
+	"Now Playing": [{
+		"Device ID": 1,
+		"Artwork Small": "https://skyegloup-eula.s3.amazonaws.com/heos_app/code_test/Appetite+For+Destruction+-+small.jpg",
+		"Artwork Large": "https://skyegloup-eula.s3.amazonaws.com/heos_app/code_test/Appetite+For+Destruction+-+large.jpg",
+		"Track Name": "Test song 1",
+		"Artist Name": "Test singer 1"
+	}, {
+		"Device ID": 2,
+		"Artwork Small": "https://skyegloup-eula.s3.amazonaws.com/heos_app/code_test/Brothers+In+Arms+-+small.jpg",
+		"Artwork Large": "https://skyegloup-eula.s3.amazonaws.com/heos_app/code_test/Brothers+In+Arms+-+large.jpg",
+		"Track Name": "Test song 2",
+		"Artist Name": "Test singer 2"
+	}, {
+		"Device ID": 3,
+		"Artwork Small": "https://skyegloup-eula.s3.amazonaws.com/heos_app/code_test/Elephant+-+small.jpg",
+		"Artwork Large": "https://skyegloup-eula.s3.amazonaws.com/heos_app/code_test/Elephant+-+large.jpg",
+		"Track Name": "Test song 3",
+		"Artist Name": "Test singer 3"
+	}]
+}
