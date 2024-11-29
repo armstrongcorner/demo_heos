@@ -115,6 +115,7 @@ struct RoomScreen: View {
     private func fetchInitData(forceFetch: Bool = false) {
         Task {
             if forceFetch || UserDefaults.standard.bool(forKey: CacheKey.needRefresh.rawValue) {
+                selectedDevice = nil
                 await initialVM.fetchInitialData()
                 playVM.initializePlayStates(with: initialVM.devices)
                 UserDefaults.standard.set(false, forKey: CacheKey.needRefresh.rawValue)
