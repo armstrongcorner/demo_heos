@@ -59,7 +59,7 @@ struct RoomScreen: View {
                         .multilineTextAlignment(.center)
                         .padding()
                     Button("Retry") {
-                        fetchInitData(forceFetch: true)
+                        fetchInitData()
                     }
                     .buttonStyle(.borderedProminent)
                 }
@@ -99,27 +99,20 @@ struct RoomScreen: View {
             .onAppear() {
                 if initialVM.refreshData {
                     // Force retrive when app launch
-                    fetchInitData(forceFetch: true)
+                    fetchInitData()
                     initialVM.refreshData = false
                 }
-//                else if UserDefaults.standard.bool(forKey: CacheKey.needRefresh.rawValue) {
-//                    // Do retrieve as needed
-//                    fetchInitData()
-//                }
             }
         }
         .tint(.black)
 //        .environment(\.myRoute, $path)
     }
     
-    private func fetchInitData(forceFetch: Bool = false) {
+    private func fetchInitData() {
         Task {
-//            if forceFetch || UserDefaults.standard.bool(forKey: CacheKey.needRefresh.rawValue) {
-                selectedDevice = nil
-                await initialVM.fetchInitialData()
-                playVM.initializePlayStates(with: initialVM.devices)
-//                UserDefaults.standard.set(false, forKey: CacheKey.needRefresh.rawValue)
-//            }
+            selectedDevice = nil
+            await initialVM.fetchInitialData()
+            playVM.initializePlayStates(with: initialVM.devices)
         }
     }
 }
