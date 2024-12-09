@@ -8,25 +8,10 @@
 import Foundation
 import SwiftUI
 
-private struct ShareViewModelKey: EnvironmentKey {
-    static let defaultValue: ShareViewModelProtocol = makeDefaultViewModel()
+private struct ShareViewModelKey: @preconcurrency EnvironmentKey {
+    @MainActor
+    static let defaultValue: ShareViewModelProtocol = ShareViewModel()
 }
-
-@MainActor
-private func makeDefaultViewModel() -> ShareViewModelProtocol {
-    ShareViewModel()
-}
-
-//private struct ShareViewModelKey: EnvironmentKey {
-//    static var defaultValue: ShareViewModelProtocol {
-//        get {
-//            Task { @MainActor in
-//                return ShareViewModel()
-//            }
-//            fatalError("Asynchronously only")
-//        }
-//    }
-//}
 
 extension EnvironmentValues {
     var shareViewModel: ShareViewModelProtocol {
