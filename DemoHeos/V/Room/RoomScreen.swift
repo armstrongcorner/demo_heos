@@ -8,109 +8,83 @@
 import SwiftUI
 
 struct RoomScreen: View {
-    @State private var path: [Route] = []
-    @State private var initialVM: InitialViewModelProtocol
-    @State private var playVM: PlayViewModelProtocol
-    @State private var selectedDevice: Device?
-    @State private var selectedPlayItem: NowPlayingItem?
+    @Environment(\.shareViewModel) var shareVM: ShareViewModelProtocol
+    @Environment(\.playViewModel) var playVM: PlayViewModelProtocol
     
-    init(
-        initialVM: InitialViewModelProtocol = InitialViewModel(),
-        playVM: PlayViewModelProtocol = PlayViewModel()
-    ) {
+    @State private var initialVM: InitialViewModelProtocol
+    
+    init(initialVM: InitialViewModelProtocol = InitialViewModel()) {
         self.initialVM = initialVM
-        self.playVM = playVM
     }
 
     var body: some View {
-        NavigationStack(path: $path) {
-            VStack {
-                if !initialVM.isLoading && initialVM.errorMessage == nil {
-                    Text("Drag one room into another to group them")
-                        .font(.subheadline)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal)
-
-                    RoomListView(
-                        devices: initialVM.devices,
-                        playingItems: initialVM.playingItems,
-                        playVM: $playVM,
-                        selectedDevice: $selectedDevice,
-                        selectedPlayItem: $selectedPlayItem,
-                        path: $path
-                    )
-                    
-                    Spacer()
-                    
-                    if let selectedDevice = selectedDevice, playVM.showBrief {
-                        // Show the current selected device
-                        BriefPlayView(
-                            playVM: $playVM,
-                            selectedDevice: selectedDevice,
-                            playItem: selectedPlayItem
-                        )
-                    }
-                } else if initialVM.isLoading {
-                    ProgressView("Loading")
-                        .progressViewStyle(CircularProgressViewStyle())
-                } else if let errorMessage = initialVM.errorMessage {
-                    Text("Error:\n\(errorMessage)")
-                        .foregroundColor(.red)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                    Button("Retry") {
-                        fetchInitData()
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigation) {
-                    Button {
-                        print("icon clicked")
-                    } label: {
-                        Image(systemName: "headphones.circle.fill")
-                    }
-                }
+        VStack {
+            switch initialVM.fetchDataState {
+            case .done:
+                Text("Drag one room into another to group them")
+                    .font(.subheadline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
                 
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        print("Edit clicked")
-                    } label: {
-                        Text("Edit")
-                    }
-                    .buttonStyle(PlainButtonStyle())
+                RoomListView(
+                    devices: initialVM.devices,
+                    playingItems: initialVM.playingItems
+                )
+                
+                Spacer()
+                
+//                if playVM.showBrief {
+                if playVM.selectedDevice != nil && playVM.showBrief {
+                    // Show the current selected device
+                    BriefPlayView()
                 }
-            }
-            .navigationTitle("Rooms")
-            .navigationDestination(for: Route.self) { value in
-//                getViewByRoute(value)
-                switch value {
-                case .nowPlayingScreen:
-                    NowPlayingScreen(
-                        playVM: $playVM,
-                        device: selectedDevice ?? Device(id: 0, name: "Unknown"),
-                        nowPlayingItem: selectedPlayItem
-                    )
-                    .navigationTitle(selectedDevice?.name ?? "Unknown")
-                    .navigationBarTitleDisplayMode(.inline)
-                }
-            }
-            .onAppear() {
-                if initialVM.refreshData {
-                    // Force retrive when app launch
+            case .loading:
+                ProgressView("Loading")
+                    .progressViewStyle(CircularProgressViewStyle())
+            case .error:
+                Text("Error:\n\(initialVM.errorMessage ?? "")")
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                    .padding()
+                Button("Retry") {
                     fetchInitData()
-                    initialVM.refreshData = false
                 }
+                .buttonStyle(.borderedProminent)
+            case .idle:
+                EmptyView()
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigation) {
+                Button {
+                    print("icon clicked")
+                } label: {
+                    Image(systemName: "headphones.circle.fill")
+                }
+            }
+            
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    print("Edit clicked")
+                } label: {
+                    Text("Edit")
+                }
+                .buttonStyle(PlainButtonStyle())
+            }
+        }
+        .navigationTitle("Rooms")
+        .onAppear() {
+            if shareVM.refreshData {
+                // Force retrive when app launch
+                fetchInitData()
+                shareVM.refreshData = false
             }
         }
         .tint(.black)
-//        .environment(\.myRoute, $path)
     }
     
     private func fetchInitData() {
         Task {
-            selectedDevice = nil
             await initialVM.fetchInitialData()
             playVM.initializePlayStates(with: initialVM.devices)
         }
@@ -133,21 +107,18 @@ final class MockInitialViewModel: InitialViewModelProtocol {
     var devices: [Device]
     var playingItems: [NowPlayingItem]
     var errorMessage: String?
-    var isLoading: Bool
-    var refreshData: Bool
+    var fetchDataState: FetchDataState
     
     init(
         devices: [Device] = [],
         playingItems: [NowPlayingItem] = [],
         errorMessage: String? = nil,
-        isLoading: Bool = true,
-        refreshData: Bool = false
+        fetchDataState: FetchDataState = .loading
     ) {
         self.devices = devices
         self.playingItems = playingItems
         self.errorMessage = errorMessage
-        self.isLoading = isLoading
-        self.refreshData = refreshData
+        self.fetchDataState = fetchDataState
     }
     
     func fetchInitialData() async {

@@ -6,10 +6,12 @@
 //
 
 import Foundation
-import Combine
 
-extension Notification.Name {
-    static let isDataSourceChanged = Notification.Name("isDataSourceChanged")
+enum FetchDataState {
+    case done
+    case loading
+    case error
+    case idle
 }
 
 @MainActor
@@ -17,8 +19,7 @@ protocol InitialViewModelProtocol: Sendable {
     var devices: [Device] { get }
     var playingItems: [NowPlayingItem] { get }
     var errorMessage: String? { get }
-    var isLoading: Bool { get }
-    var refreshData: Bool { get set }
+    var fetchDataState: FetchDataState { get }
     
     func fetchInitialData() async
 }
@@ -28,10 +29,7 @@ final class InitialViewModel: ObservableObject, InitialViewModelProtocol {
     var devices: [Device]
     var playingItems: [NowPlayingItem]
     var errorMessage: String?
-    var isLoading: Bool
-    var refreshData: Bool
-    
-    private var cancellables: Set<AnyCancellable> = []
+    var fetchDataState: FetchDataState
     
     private let deviceService: DeviceServiceProtocol
     private let playService: PlayServiceProtocol
@@ -41,8 +39,7 @@ final class InitialViewModel: ObservableObject, InitialViewModelProtocol {
         devices: [Device] = [],
         playingItems: [NowPlayingItem] = [],
         errorMessage: String? = nil,
-        isLoading: Bool = false,
-        refreshData: Bool = true,
+        fetchDataState: FetchDataState = .idle,
         deviceService: DeviceServiceProtocol = DeviceService(),
         playService: PlayServiceProtocol = PlayService(),
         fileService: FileServiceProtocol = FileService()
@@ -50,23 +47,15 @@ final class InitialViewModel: ObservableObject, InitialViewModelProtocol {
         self.devices = devices
         self.playingItems = playingItems
         self.errorMessage = errorMessage
-        self.isLoading = isLoading
-        self.refreshData = refreshData
+        self.fetchDataState = fetchDataState
+        
         self.deviceService = deviceService
         self.playService = playService
         self.fileService = fileService
-        
-        // Listen to the notification
-        NotificationCenter.default.publisher(for: .isDataSourceChanged)
-            .compactMap { $0.object as? Bool }
-            .sink { [weak self] isDataSourceChanged in
-                self?.refreshData = isDataSourceChanged
-            }
-            .store(in: &cancellables)
     }
     
     func fetchInitialData() async {
-        isLoading = true
+        fetchDataState = .loading
         errorMessage = nil
         
         let isMock: Bool = UserDefaults.standard.bool(forKey: CacheKey.isMock.rawValue)
@@ -85,15 +74,20 @@ final class InitialViewModel: ObservableObject, InitialViewModelProtocol {
                 let playModel = try await fileService.loadJSONFromAssets(named: fileName, as: PlayModel?.self)
                 self.playingItems = playModel?.nowPlaying ?? []
                 print("total playing items: \(self.playingItems.count)")
-            } catch let FileServiceError.assetNotFound(fileName: fileName) {
-                appendError("Asset not found: \(fileName)")
-            } catch let FileServiceError.decodingFailed(error: error) {
-                appendError("Decoding error: \(error)")
+                
+                fetchDataState = .done
             } catch {
-                appendError("Data fetch failed: \(error.localizedDescription)")
+                switch error {
+                case let FileServiceError.assetNotFound(fileName: fileName):
+                    appendError("Asset not found: \(fileName)")
+                case let FileServiceError.decodingFailed(error):
+                    appendError("Decoding error: \(error)")
+                default:
+                    appendError("Data fetch failed: \(error.localizedDescription)")
+                }
+                
+                fetchDataState = .error
             }
-            
-            self.isLoading = false
         } else {
             // Mock off: get data from network
             print("Get from network !!!")
@@ -104,11 +98,12 @@ final class InitialViewModel: ObservableObject, InitialViewModelProtocol {
                 
                 // Wait for both complete
                 let _ = try await (deviceRequest, playRequest)
+                
+                fetchDataState = .done
             } catch {
                 appendError("Data fetch failed: \(error.localizedDescription)")
+                fetchDataState = .error
             }
-            
-            self.isLoading = false
         }
     }
     
@@ -143,7 +138,7 @@ final class InitialViewModel: ObservableObject, InitialViewModelProtocol {
     // Combine the err msg
     private func appendError(_ message: String) {
         if let existingError = self.errorMessage {
-            errorMessage = "\(existingError)\n\(message)"
+            errorMessage = "\(existingError)\n\n\(message)"
         } else {
             errorMessage = message
         }

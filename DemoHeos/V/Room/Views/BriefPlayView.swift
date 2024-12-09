@@ -8,23 +8,22 @@
 import SwiftUI
 
 struct BriefPlayView: View {
-    @Binding var playVM: PlayViewModelProtocol
-    
-    let selectedDevice: Device
-    let playItem: NowPlayingItem?
+    @Environment(\.playViewModel) var playVM: PlayViewModelProtocol
     
     var body: some View {
-        let currentPlayState = playVM.getPlayState(for: selectedDevice.id ?? 0)
+//        let currentPlayState = playVM.getPlayState(for: playVM.selectedDevice?.id ?? 0)
+        let currentPlayState = playVM.getCurrentPlayState()
+        
         HStack {
-            MyWebImage(imgUrl: playItem?.artworkSmall)
+            MyWebImage(imgUrl: playVM.selectedPlayingItem?.artworkSmall)
                 .frame(width: 50, height: 50)
                 .cornerRadius(5)
                 .padding(.leading, 10)
             
             VStack(alignment: .leading) {
-                Text(playItem?.trackName ?? "Unknown Track")
+                Text(playVM.selectedPlayingItem?.trackName ?? "Unknown Track")
                     .font(.headline)
-                Text(playItem?.artistName ?? "Unknow Track")
+                Text(playVM.selectedPlayingItem?.artistName ?? "Unknow Track")
                     .font(.subheadline)
             }
             .padding(.leading, 10)
@@ -32,11 +31,9 @@ struct BriefPlayView: View {
             Spacer()
             
             Button {
-                playVM.updatePlayState(for: selectedDevice.id ?? 0, to: currentPlayState == .playing ? .paused : .playing)
+//                playVM.updatePlayState(for: playVM.selectedDevice?.id ?? 0, to: currentPlayState == .playing ? .paused : .playing)
+                playVM.updateCurrentPlayState(newState: currentPlayState == .playing ? .paused : .playing)
             } label: {
-//                Image(systemName: currentPlayState == .playing ? "pause.fill" : "play.fill")
-//                    .resizable()
-//                    .frame(width: 30, height: 30)
                 Image(currentPlayState == .playing ? "now_playing_controls_pause" : "now_playing_controls_play")
                     .resizable()
                     .frame(width: 30, height: 30)
@@ -51,14 +48,14 @@ struct BriefPlayView: View {
 
 #Preview {
     BriefPlayView(
-        playVM: .constant(PlayViewModel()),
-        selectedDevice: Device(id: 1, name: "test"),
-        playItem: NowPlayingItem(
-            deviceID: 1,
-            artworkSmall: nil,
-            artworkLarge: nil,
-            trackName: "test track",
-            artistName: "test artist"
-        )
+//        playVM: .constant(PlayViewModel()),
+//        selectedDevice: Device(id: 1, name: "test"),
+//        playItem: NowPlayingItem(
+//            deviceID: 1,
+//            artworkSmall: nil,
+//            artworkLarge: nil,
+//            trackName: "test track",
+//            artistName: "test artist"
+//        )
     )
 }

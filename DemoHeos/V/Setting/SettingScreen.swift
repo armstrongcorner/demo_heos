@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct SettingScreen: View {
+    @Environment(\.shareViewModel) var shareVM: ShareViewModelProtocol
+    @Environment(\.playViewModel) var playVM: PlayViewModelProtocol
+    
     @State private var isMock: Bool
     
     init(isMock: Bool = UserDefaults.standard.bool(forKey: CacheKey.isMock.rawValue)) {
@@ -21,8 +24,10 @@ struct SettingScreen: View {
                     .onChange(of: isMock) { _, newValue in
                         // Use local json data or not
                         UserDefaults.standard.set(newValue, forKey: CacheKey.isMock.rawValue)
-                        // Notify the data changed
-                        NotificationCenter.default.post(name: .isDataSourceChanged, object: true)
+                        // Reset fetch data and play state
+                        shareVM.refreshData = true
+                        playVM.selectedDevice = nil
+                        playVM.selectedPlayingItem = nil
                     }
             }
             .listStyle(.automatic)
