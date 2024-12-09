@@ -8,22 +8,27 @@
 import SwiftUI
 
 enum Tab {
-    case home
+    case nowPlaying
     case room
     case setting
 }
 
 struct MainScreen: View {
-    @State private var selectedTab: Tab = .room // Default select 'room'
+    @State private var shareVM: ShareViewModelProtocol
+    @State private var playVM: PlayViewModelProtocol
     
-    init(selectedTab: Tab = .room) {
-        self.selectedTab = selectedTab
+    init(
+        shareVM: ShareViewModelProtocol = ShareViewModel(selectedTab: .room, refreshData: true),
+        playVM: PlayViewModelProtocol = PlayViewModel()
+    ) {
+        self.shareVM = shareVM
+        self.playVM = playVM
     }
     
     var body: some View {
         VStack {
-            TabView(selection: $selectedTab) {
-                HomeScreen()
+            TabView(selection: $shareVM.selectedTab) {
+                NowPlayingScreen()
                     .tabItem {
                         Label {
                             Text("Play")
@@ -32,7 +37,7 @@ struct MainScreen: View {
                                 .renderingMode(.template)
                         }
                     }
-                    .tag(Tab.home)
+                    .tag(Tab.nowPlaying)
                     .tint(.black)
                 
                 RoomScreen()
@@ -61,6 +66,8 @@ struct MainScreen: View {
             }
             .tint(.red)
         }
+        .environment(\.shareViewModel, shareVM)
+        .environment(\.playViewModel, playVM)
     }
 }
 

@@ -8,22 +8,20 @@
 import SwiftUI
 
 struct RoomListView: View {
+    @Environment(\.shareViewModel) var shareVM: ShareViewModelProtocol
+    @Environment(\.playViewModel) var playVM: PlayViewModelProtocol
+    
     let devices: [Device]
     let playingItems: [NowPlayingItem]
-    
-    @Binding var playVM: PlayViewModelProtocol
-    @Binding var selectedDevice: Device?
-    @Binding var selectedPlayItem: NowPlayingItem?
-    @Binding var path: [Route]
-    
+        
     var body: some View {
         List(devices, id: \.id) { device in
             Button {
-                selectedDevice = device
-                selectedPlayItem = playingItems.first { $0.deviceID == device.id }
+                playVM.selectedDevice = device
+                playVM.selectedPlayingItem = playingItems.first { $0.deviceID == device.id }
                 playVM.showBrief = false
                 
-                path.append(.nowPlayingScreen)
+                shareVM.selectedTab = Tab.nowPlaying
             } label: {
                 let deviceName = device.name ?? "Unknown Device"
                 let nowPlayItem = playingItems.first { $0.deviceID == device.id }
@@ -34,7 +32,7 @@ struct RoomListView: View {
                     deviceName: deviceName,
                     trackName: nowPlayItem?.trackName ?? "",
                     playState: playState,
-                    isSelected: selectedDevice?.id == device.id
+                    isSelected: playVM.selectedDevice?.id == device.id
                 )
             }
             .listRowSeparator(.hidden)
@@ -45,13 +43,13 @@ struct RoomListView: View {
     }
 }
 
-#Preview {
-    RoomListView(
-        devices: [Device(id: 1, name: "test1"), Device(id: 2, name: "test2"), Device(id: 3, name: "test3")],
-        playingItems: [NowPlayingItem(deviceID: 1, artworkSmall: nil, artworkLarge: nil, trackName: "test track", artistName: "test artist")],
-        playVM: .constant(PlayViewModel()),
-        selectedDevice: .constant(Device(id: 1, name: "test")),
-        selectedPlayItem: .constant(NowPlayingItem(deviceID: 1, artworkSmall: nil, artworkLarge: nil, trackName: "test track", artistName: "test artist")),
-        path: .constant([])
-    )
-}
+//#Preview {
+//    RoomListView(
+//        devices: [Device(id: 1, name: "test1"), Device(id: 2, name: "test2"), Device(id: 3, name: "test3")],
+//        playingItems: [NowPlayingItem(deviceID: 1, artworkSmall: nil, artworkLarge: nil, trackName: "test track", artistName: "test artist")],
+//        playVM: .constant(PlayViewModel()),
+//        selectedDevice: .constant(Device(id: 1, name: "test")),
+//        selectedPlayItem: .constant(NowPlayingItem(deviceID: 1, artworkSmall: nil, artworkLarge: nil, trackName: "test track", artistName: "test artist")),
+//        path: .constant([])
+//    )
+//}
