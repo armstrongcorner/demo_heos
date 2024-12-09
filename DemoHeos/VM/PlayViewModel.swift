@@ -8,23 +8,9 @@
 import Foundation
 import SwiftUI
 
-//private struct PlayViewModelKey: EnvironmentKey {
-//    static var defaultValue: PlayViewModelProtocol {
-//        get {
-//            Task { @MainActor in
-//                return PlayViewModel()
-//            }
-//            fatalError("Asynchronously only")
-//        }
-//    }
-//}
-private struct PlayViewModelKey: EnvironmentKey {
-    static let defaultValue: PlayViewModelProtocol = makeDefaultViewModel()
-}
-
-@MainActor
-private func makeDefaultViewModel() -> PlayViewModelProtocol {
-    PlayViewModel()
+private struct PlayViewModelKey: @preconcurrency EnvironmentKey {
+    @MainActor
+    static let defaultValue: PlayViewModelProtocol = PlayViewModel()
 }
 
 extension EnvironmentValues {
