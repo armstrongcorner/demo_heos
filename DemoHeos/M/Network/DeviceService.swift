@@ -12,9 +12,17 @@ protocol DeviceServiceProtocol: Sendable {
 }
 
 actor DeviceService: DeviceServiceProtocol {
+    private let apiClient: ApiClientProtocol
+    
+    init(apiClient: ApiClientProtocol = ApiClient.shared) {
+        self.apiClient = apiClient
+    }
+    
     func getDeviceInfo() async throws -> DeviceResponse? {
-        let deviceInfoResponse = try await ApiClient.shared.get(
+        let deviceInfoResponse = try await apiClient.get(
             url: Endpoint.deviceInfo.url,
+            headers: [:],
+            body: nil,
             responseType: DeviceResponse.self
         )
         

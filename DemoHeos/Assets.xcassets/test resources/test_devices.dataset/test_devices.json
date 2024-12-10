@@ -1,0 +1,12 @@
+{
+	"Devices": [{
+		"ID": 1,
+		"Name": "Sydney"
+	}, {
+		"ID": 2,
+		"Name": "Beijing"
+	}, {
+		"ID": 3,
+		"Name": "Auckland"
+	}]
+}

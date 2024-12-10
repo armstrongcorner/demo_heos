@@ -2,7 +2,7 @@
 //  ShareViewModel.swift
 //  DemoHeos
 //
-//  Created by Tony Borner on 12/8/24.
+//  Created by Armstrong Liu on 12/8/24.
 //
 
 import Foundation
