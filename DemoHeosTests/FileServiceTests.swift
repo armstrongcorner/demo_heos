@@ -25,7 +25,7 @@ final class FileServiceTests: XCTestCase {
 
     func testLoadJSONFromAssetsSuccess() async throws {
         // given
-        let fileName = "TestDeviceResponse"
+        let fileName = "test_devices"
 
         do {
             // when
@@ -36,34 +36,41 @@ final class FileServiceTests: XCTestCase {
             XCTAssertEqual(result.devices?.first?.id, 1)
             XCTAssertEqual(result.devices?.first?.name, "Sydney")
         } catch {
-            XCTFail("加载 JSON 失败：\(error)")
+            XCTFail("Load json file error: \(error)")
         }
     }
 
     func testLoadJSONFromAssetsFileNotFound() async {
-        let fileName = "NonExistentFile"
+        // given
+        let fileName = "no_such_file"
 
         do {
-            let _: DeviceResponse = try await sut.loadJSONFromAssets(named: fileName, as: DeviceResponse.self)
-            XCTFail("预期抛出 assetNotFound 错误，但未抛出")
+            // when
+            let _ = try await sut.loadJSONFromAssets(named: fileName, as: DeviceModel.self)
+            XCTFail("Fail: No expected error thrown, should throw out 'assetNotFound' error")
         } catch FileServiceError.assetNotFound(let missingFileName) {
+            // then
             XCTAssertEqual(missingFileName, fileName)
         } catch {
-            XCTFail("预期抛出 assetNotFound 错误，但抛出了其他错误：\(error)")
+            // fail
+            XCTFail("Fail: Should throw out 'assetNotFound' error, but throw out other error: \(error)")
         }
     }
 
     func testLoadJSONFromAssetsDecodingFailed() async {
-        // 假设 Assets 中有名为 "InvalidDeviceResponse" 的 JSON 文件，其内容无法解码为 DeviceResponse
-        let fileName = "InvalidDeviceResponse"
+        // given
+        let fileName = "invalid_test_devices"
 
         do {
-            let _: DeviceResponse = try await sut.loadJSONFromAssets(named: fileName, as: DeviceResponse.self)
-            XCTFail("预期抛出 decodingFailed 错误，但未抛出")
+            // when
+            let _ = try await sut.loadJSONFromAssets(named: fileName, as: DeviceModel.self)
+            XCTFail("Fail: No expected error thrown, should throw out 'decodingFailed' error")
         } catch FileServiceError.decodingFailed(let decodingError) {
+            // then
             XCTAssertNotNil(decodingError)
         } catch {
-            XCTFail("预期抛出 decodingFailed 错误，但抛出了其他错误：\(error)")
+            // fail
+            XCTFail("Fail: Should throw out 'decodingFailed' error, but throw out other error: \(error)")
         }
     }
 }

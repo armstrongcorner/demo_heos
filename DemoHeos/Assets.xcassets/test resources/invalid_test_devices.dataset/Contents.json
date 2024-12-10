@@ -1,0 +1,12 @@
+{
+  "data" : [
+    {
+      "filename" : "invalid_test_devices.json",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
