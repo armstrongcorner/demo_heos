@@ -20,7 +20,6 @@ extension EnvironmentValues {
     }
 }
 
-
 enum PlayState {
     case paused
     case playing
@@ -41,32 +40,23 @@ protocol PlayViewModelProtocol: AnyObject, Sendable {
 
 @Observable @MainActor
 final class PlayViewModel: PlayViewModelProtocol {
-    private var playStates: [Int: PlayState]
-    private var devices: [Device]
+    private var playStates: [Int: PlayState] = [:]
 
     var selectedDevice: Device?
     var selectedPlayingItem: NowPlayingItem?
     var showBrief: Bool
-//    
-//    var selectedPlayState: PlayState? {
-//        if let selectedDevice = selectedDevice {
-//            
-//        }
-//        return nil
-//    }
 
     init(
-        playStates: [Int: PlayState] = [:],
         devices: [Device] = [],
         selectedDevice: Device? = nil,
         selectedPlayingItem: NowPlayingItem? = nil,
         showBrief: Bool = false
     ) {
-        self.playStates = playStates
-        self.devices = devices
         self.selectedDevice = selectedDevice
         self.selectedPlayingItem = selectedPlayingItem
         self.showBrief = showBrief
+        
+        initializePlayStates(with: devices)
     }
 
     // Initialize the play state for each device

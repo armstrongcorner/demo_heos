@@ -19,34 +19,6 @@ final class PlayServiceTests: XCTestCase {
         mockApiClient = MockApiClient()
         sut = PlayService(apiClient: mockApiClient)
         
-        let mockNowPlayingItem1: NowPlayingItem = NowPlayingItem(
-            deviceID: 1,
-            artworkSmall: "https://example.com/artwork_small_1.jpg",
-            artworkLarge: "https://example.com/artwork_large_1.jpg",
-            trackName: "Test Track 1",
-            artistName: "Test Artist 1"
-        )
-        let mockNowPlayingItem2: NowPlayingItem = NowPlayingItem(
-            deviceID: 2,
-            artworkSmall: "https://example.com/artwork_small_2.jpg",
-            artworkLarge: "https://example.com/artwork_large_2.jpg",
-            trackName: "Test Track 2",
-            artistName: "Test Artist 2"
-        )
-        let mockNowPlayingItem3: NowPlayingItem = NowPlayingItem(
-            deviceID: 3,
-            artworkSmall: "https://example.com/artwork_small_3.jpg",
-            artworkLarge: "https://example.com/artwork_large_3.jpg",
-            trackName: "Test Track 3",
-            artistName: "Test Artist 3"
-        )
-        let mockNowPlayingItem4: NowPlayingItem = NowPlayingItem(
-            deviceID: 4,
-            artworkSmall: "https://example.com/artwork_small_4.jpg",
-            artworkLarge: "https://example.com/artwork_large_4.jpg",
-            trackName: "Test Track 4",
-            artistName: "Test Artist 4"
-        )
         mockResponse = PlayResponse(nowPlaying: [mockNowPlayingItem1, mockNowPlayingItem2, mockNowPlayingItem3, mockNowPlayingItem4])
     }
     

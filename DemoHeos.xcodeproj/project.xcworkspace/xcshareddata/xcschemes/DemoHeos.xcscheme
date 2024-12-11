@@ -18,7 +18,7 @@
                BlueprintIdentifier = "229970282CF6DE5E00B0B800"
                BuildableName = "DemoHeos.app"
                BlueprintName = "DemoHeos"
-               ReferencedContainer = "container:DemoHeos.xcodeproj">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,7 +47,7 @@
             BlueprintIdentifier = "229970282CF6DE5E00B0B800"
             BuildableName = "DemoHeos.app"
             BlueprintName = "DemoHeos"
-            ReferencedContainer = "container:DemoHeos.xcodeproj">
+            ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -64,7 +64,7 @@
             BlueprintIdentifier = "229970282CF6DE5E00B0B800"
             BuildableName = "DemoHeos.app"
             BlueprintName = "DemoHeos"
-            ReferencedContainer = "container:DemoHeos.xcodeproj">
+            ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -19,10 +19,10 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "229970422CF6DE6200B0B800"
-               BuildableName = "DemoHeosUITests.xctest"
-               BlueprintName = "DemoHeosUITests"
-               ReferencedContainer = "container:DemoHeos.xcodeproj">
+               BlueprintIdentifier = "229970382CF6DE6200B0B800"
+               BuildableName = "DemoHeosTests.xctest"
+               BlueprintName = "DemoHeosTests"
+               ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
       </Testables>
