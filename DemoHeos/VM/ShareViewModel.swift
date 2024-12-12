@@ -34,19 +34,22 @@ final class ShareViewModel: ShareViewModelProtocol {
     var selectedTab: Tab
     var refreshData: Bool
     var isMock: Bool
+    private let userDefaults: UserDefaults
     
     init(
         selectedTab: Tab = .room,
         refreshData: Bool = true,
-        isMock: Bool = UserDefaults.standard.bool(forKey: CacheKey.isMock.rawValue)
+        isMock: Bool = false,
+        userDefaults: UserDefaults = .standard
     ) {
         self.selectedTab = selectedTab
         self.refreshData = refreshData
-        self.isMock = isMock
+        self.userDefaults = userDefaults
+        self.isMock = userDefaults.bool(forKey: CacheKey.isMock.rawValue)
     }
     
     func toggleMock(_ newValue: Bool) {
         isMock = newValue
-        UserDefaults.standard.set(newValue, forKey: CacheKey.isMock.rawValue)
+        userDefaults.set(newValue, forKey: CacheKey.isMock.rawValue)
     }
 }
