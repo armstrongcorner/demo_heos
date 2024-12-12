@@ -38,7 +38,6 @@ struct MainScreen: View {
                         }
                     }
                     .tag(Tab.nowPlaying)
-                    .tint(.black)
                 
                 RoomScreen()
                     .tabItem {
@@ -50,7 +49,6 @@ struct MainScreen: View {
                         }
                     }
                     .tag(Tab.room)
-                    .tint(.black)
                 
                 SettingScreen()
                     .tabItem {
@@ -62,7 +60,6 @@ struct MainScreen: View {
                         }
                     }
                     .tag(Tab.setting)
-                    .tint(.black)
             }
             .tint(.red)
         }

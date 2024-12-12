@@ -75,10 +75,12 @@ struct NowPlayingScreen: View {
             .onDisappear() {
                 playVM.showBrief = true
             }
+            .tint(.black)
         } else {
             VStack {
                 Text("No room selected yet")
             }
+            .tint(.black)
         }
     }
 }
@@ -92,7 +94,6 @@ struct NowPlayingScreen: View {
     
     NowPlayingScreen()
         .environment(\.playViewModel, mockPlayVM)
-        .tint(.black)
 }
 
 #Preview("real") {
@@ -100,5 +101,4 @@ struct NowPlayingScreen: View {
     
     NowPlayingScreen()
         .environment(\.playViewModel, playVM)
-        .tint(.black)
 }

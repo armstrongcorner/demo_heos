@@ -11,33 +11,30 @@ struct SettingScreen: View {
     @Environment(\.shareViewModel) var shareVM: ShareViewModelProtocol
     @Environment(\.playViewModel) var playVM: PlayViewModelProtocol
     
-    @State private var isMock: Bool
-    
-    init(isMock: Bool = UserDefaults.standard.bool(forKey: CacheKey.isMock.rawValue)) {
-        self.isMock = isMock
-    }
-    
     var body: some View {
         NavigationView {
             List {
-                Toggle("Mock Data", isOn: $isMock)
-                    .onChange(of: isMock) { _, newValue in
-                        // Use local json data or not
-                        UserDefaults.standard.set(newValue, forKey: CacheKey.isMock.rawValue)
-                        // Reset fetch data and play state
+                Toggle("Mock Data", isOn: Binding(
+                    get: { shareVM.isMock },
+                    set: { newValue in
+                        shareVM.toggleMock(newValue)
                         shareVM.refreshData = true
                         playVM.selectedDevice = nil
                         playVM.selectedPlayingItem = nil
                     }
+                ))
             }
             .listStyle(.automatic)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.automatic)
         }
+        .tint(.black)
     }
 }
 
 #Preview {
-//    SettingScreen(isMock: true)
-    SettingScreen(isMock: false)
+    let mockShareVM = MockShareViewModel()
+    
+    SettingScreen()
+        .environment(\.shareViewModel, mockShareVM)
 }
