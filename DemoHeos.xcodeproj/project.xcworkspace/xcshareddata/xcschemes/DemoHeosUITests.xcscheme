@@ -22,7 +22,7 @@
                BlueprintIdentifier = "229970422CF6DE6200B0B800"
                BuildableName = "DemoHeosUITests.xctest"
                BlueprintName = "DemoHeosUITests"
-               ReferencedContainer = "container:DemoHeos.xcodeproj">
+               ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>
       </Testables>

@@ -21,7 +21,13 @@ protocol InitialViewModelProtocol: Sendable {
     var errorMessage: String? { get }
     var fetchDataState: FetchDataState { get }
     
-    func fetchInitialData() async
+    func fetchInitialData(isMock: Bool) async
+}
+
+extension InitialViewModelProtocol {
+    func fetchInitialData(isMock: Bool = UserDefaults.standard.bool(forKey: CacheKey.isMock.rawValue)) async {
+        await fetchInitialData(isMock: isMock)
+    }
 }
 
 @Observable @MainActor
@@ -54,11 +60,10 @@ final class InitialViewModel: ObservableObject, InitialViewModelProtocol {
         self.fileService = fileService
     }
     
-    func fetchInitialData() async {
+    func fetchInitialData(isMock: Bool) async {
         fetchDataState = .loading
         errorMessage = nil
         
-        let isMock: Bool = UserDefaults.standard.bool(forKey: CacheKey.isMock.rawValue)
         if isMock {
             // Mock on: get data from local json file
             print("Get from json file !!!")

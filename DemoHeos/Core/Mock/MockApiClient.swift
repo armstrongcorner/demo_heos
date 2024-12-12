@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@testable import DemoHeos
 
 final class MockApiClient: ApiClientProtocol {
     var mockResponse: Decodable?

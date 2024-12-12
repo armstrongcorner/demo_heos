@@ -75,24 +75,30 @@ struct NowPlayingScreen: View {
             .onDisappear() {
                 playVM.showBrief = true
             }
+            .tint(.black)
         } else {
             VStack {
                 Text("No room selected yet")
             }
+            .tint(.black)
         }
     }
 }
 
-#Preview {
-    NowPlayingScreen(
-//        playVM: .constant(PlayViewModel()),
-//        device: Device(id: 1, name: "test"),
-//        nowPlayingItem: NowPlayingItem(
-//            deviceID: 1,
-//            artworkSmall: nil,
-//            artworkLarge: nil,
-//            trackName: "test track",
-//            artistName: "test artist"
-//        )
+#Preview("selected one") {
+    let mockPlayVM = PlayViewModel(
+        devices: [mockDevice1, mockDevice2, mockDevice3],
+        selectedDevice: mockDevice1,
+        selectedPlayingItem: mockNowPlayingItem1
     )
+    
+    NowPlayingScreen()
+        .environment(\.playViewModel, mockPlayVM)
+}
+
+#Preview("real") {
+    let playVM = PlayViewModel()
+    
+    NowPlayingScreen()
+        .environment(\.playViewModel, playVM)
 }

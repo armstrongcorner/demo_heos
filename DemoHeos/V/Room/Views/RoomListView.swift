@@ -43,13 +43,9 @@ struct RoomListView: View {
     }
 }
 
-//#Preview {
-//    RoomListView(
-//        devices: [Device(id: 1, name: "test1"), Device(id: 2, name: "test2"), Device(id: 3, name: "test3")],
-//        playingItems: [NowPlayingItem(deviceID: 1, artworkSmall: nil, artworkLarge: nil, trackName: "test track", artistName: "test artist")],
-//        playVM: .constant(PlayViewModel()),
-//        selectedDevice: .constant(Device(id: 1, name: "test")),
-//        selectedPlayItem: .constant(NowPlayingItem(deviceID: 1, artworkSmall: nil, artworkLarge: nil, trackName: "test track", artistName: "test artist")),
-//        path: .constant([])
-//    )
-//}
+#Preview {
+    RoomListView(
+        devices: [mockDevice1, mockDevice2, mockDevice3, mockDevice4],
+        playingItems: [mockNowPlayingItem1, mockNowPlayingItem2, mockNowPlayingItem3, mockNowPlayingItem4]
+    )
+}

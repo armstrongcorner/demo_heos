@@ -19,10 +19,6 @@ final class DeviceServiceTests: XCTestCase {
         mockApiClient = MockApiClient()
         sut = DeviceService(apiClient: mockApiClient)
         
-        let mockDevice1: Device = Device(id: 1, name: "Device 1")
-        let mockDevice2: Device = Device(id: 2, name: "Device 2")
-        let mockDevice3: Device = Device(id: 3, name: "Device 3")
-        let mockDevice4: Device = Device(id: 4, name: "Device 4")
         mockResponse = DeviceResponse(devices: [mockDevice1, mockDevice2, mockDevice3, mockDevice4])
     }
 
