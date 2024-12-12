@@ -11,7 +11,6 @@ struct BriefPlayView: View {
     @Environment(\.playViewModel) var playVM: PlayViewModelProtocol
     
     var body: some View {
-//        let currentPlayState = playVM.getPlayState(for: playVM.selectedDevice?.id ?? 0)
         let currentPlayState = playVM.getCurrentPlayState()
         
         HStack {
@@ -31,7 +30,6 @@ struct BriefPlayView: View {
             Spacer()
             
             Button {
-//                playVM.updatePlayState(for: playVM.selectedDevice?.id ?? 0, to: currentPlayState == .playing ? .paused : .playing)
                 playVM.updateCurrentPlayState(newState: currentPlayState == .playing ? .paused : .playing)
             } label: {
                 Image(currentPlayState == .playing ? "now_playing_controls_pause" : "now_playing_controls_play")
@@ -47,15 +45,12 @@ struct BriefPlayView: View {
 }
 
 #Preview {
-    BriefPlayView(
-//        playVM: .constant(PlayViewModel()),
-//        selectedDevice: Device(id: 1, name: "test"),
-//        playItem: NowPlayingItem(
-//            deviceID: 1,
-//            artworkSmall: nil,
-//            artworkLarge: nil,
-//            trackName: "test track",
-//            artistName: "test artist"
-//        )
+    let mockPlayVM = PlayViewModel(
+        devices: [mockDevice1, mockDevice2, mockDevice3],
+        selectedDevice: mockDevice1,
+        selectedPlayingItem: mockNowPlayingItem1
     )
+    
+    BriefPlayView()
+        .environment(\.playViewModel, mockPlayVM)
 }
