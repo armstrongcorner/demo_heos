@@ -68,6 +68,14 @@ struct MainScreen: View {
     }
 }
 
-#Preview {
-    MainScreen()
+#Preview("default mock on") {
+    let mockShareVM = MockShareViewModel(isMock: true)
+    
+    MainScreen(shareVM: mockShareVM)
+}
+
+#Preview("default mock off") {
+    let mockShareVM = MockShareViewModel(isMock: false)
+    
+    MainScreen(shareVM: mockShareVM)
 }

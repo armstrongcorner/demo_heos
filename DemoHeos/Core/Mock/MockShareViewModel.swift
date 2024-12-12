@@ -10,7 +10,11 @@ import Foundation
 class MockShareViewModel: ShareViewModelProtocol {
     var selectedTab: Tab = .room
     var refreshData: Bool = true
-    var isMock: Bool = false
+    var isMock: Bool
+    
+    init(isMock: Bool = false) {
+        self.isMock = isMock
+    }
     
     func toggleMock(_ newValue: Bool) {
         // Isolate UserDefaults for mock

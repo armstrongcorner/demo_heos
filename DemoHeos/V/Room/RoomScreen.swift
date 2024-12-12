@@ -86,7 +86,7 @@ struct RoomScreen: View {
     
     private func fetchInitData() {
         Task {
-            await initialVM.fetchInitialData()
+            await initialVM.fetchInitialData(isMock: shareVM.isMock)
             playVM.initializePlayStates(with: initialVM.devices)
         }
     }
