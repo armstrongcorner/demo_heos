@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@testable import DemoHeos
 
 actor MockPlayService: PlayServiceProtocol {
     var shouldReturnError = false

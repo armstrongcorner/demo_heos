@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@testable import DemoHeos
 
 actor MockFileService: FileServiceProtocol {
     var shouldReturnError = false

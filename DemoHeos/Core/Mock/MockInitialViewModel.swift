@@ -6,8 +6,8 @@
 //
 
 import Foundation
-@testable import DemoHeos
 
+@Observable @MainActor
 class MockInitialViewModel: InitialViewModelProtocol {
     var devices: [Device] = []
     var playingItems: [NowPlayingItem] = []
@@ -28,12 +28,12 @@ class MockInitialViewModel: InitialViewModelProtocol {
         self.shouldUseMockData = shouldUseMockData
     }
 
-    func fetchInitialData() async throws {
+    func fetchInitialData(isMock: Bool) async {
         // Mock start loading
         fetchDataState = .loading
         errorMessage = nil
         
-        try await Task.sleep(nanoseconds: 1 * 1_000_000_000)
+        try? await Task.sleep(nanoseconds: 1 * 1_000_000_000)
         
         if !shouldKeepLoading {
             if shouldReturnError {
@@ -56,3 +56,33 @@ class MockInitialViewModel: InitialViewModelProtocol {
         }
     }
 }
+
+//@Observable @MainActor
+//final class MockInitialViewModel: InitialViewModelProtocol {
+//    var devices: [Device]
+//    var playingItems: [NowPlayingItem]
+//    var errorMessage: String?
+//    var fetchDataState: FetchDataState
+//    
+//    init(
+//        devices: [Device] = [],
+//        playingItems: [NowPlayingItem] = [],
+//        errorMessage: String? = nil,
+//        fetchDataState: FetchDataState = .loading
+//    ) {
+//        self.devices = devices
+//        self.playingItems = playingItems
+//        self.errorMessage = errorMessage
+//        self.fetchDataState = fetchDataState
+//        print("111")
+//    }
+//    
+//    func fetchInitialData(isMock: Bool) async {
+//        // Mock keep loading
+//        print("aaa")
+//        fetchDataState = .error
+//        errorMessage = "error msg"
+//
+////        try? await Task.sleep(nanoseconds: 1_000_000_000)
+//    }
+//}

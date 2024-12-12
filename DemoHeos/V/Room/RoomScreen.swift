@@ -33,7 +33,6 @@ struct RoomScreen: View {
                 
                 Spacer()
                 
-//                if playVM.showBrief {
                 if playVM.selectedDevice != nil && playVM.showBrief {
                     // Show the current selected device
                     BriefPlayView()
@@ -91,38 +90,27 @@ struct RoomScreen: View {
     }
 }
 
-#Preview {
-    Group {
-//        let mockInitialVM = MockInitialViewModel()
-//        let mockInitialVM = MockInitialViewModel(errorMessage: "mock error msg", isLoading: false)
-        let mockInitialVM = InitialViewModel()
+#Preview("from network") {
+        let mockInitialVM = MockInitialViewModel()
         RoomScreen(initialVM: mockInitialVM)
-    }
 }
-//
-///*
-// Mock the vm for preview here
-// */
-//final class MockInitialViewModel: InitialViewModelProtocol {
-//    var devices: [Device]
-//    var playingItems: [NowPlayingItem]
-//    var errorMessage: String?
-//    var fetchDataState: FetchDataState
-//    
-//    init(
-//        devices: [Device] = [],
-//        playingItems: [NowPlayingItem] = [],
-//        errorMessage: String? = nil,
-//        fetchDataState: FetchDataState = .loading
-//    ) {
-//        self.devices = devices
-//        self.playingItems = playingItems
-//        self.errorMessage = errorMessage
-//        self.fetchDataState = fetchDataState
-//    }
-//    
-//    func fetchInitialData() async {
-//        // Mock keep loading
-//        try? await Task.sleep(nanoseconds: 1_000_000_000)
-//    }
-//}
+
+#Preview("from local") {
+    let mockInitialVM = MockInitialViewModel(shouldUseMockData: true)
+        RoomScreen(initialVM: mockInitialVM)
+}
+
+#Preview("keep loading") {
+    let mockInitialVM = MockInitialViewModel(shouldKeepLoading: true)
+        RoomScreen(initialVM: mockInitialVM)
+}
+
+#Preview("error") {
+    let mockInitialVM = MockInitialViewModel(shouldReturnError: true)
+        RoomScreen(initialVM: mockInitialVM)
+}
+
+#Preview("real") {
+    let mockInitialVM = InitialViewModel()
+    RoomScreen(initialVM: mockInitialVM)
+}

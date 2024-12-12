@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@testable import DemoHeos
 
 actor MockDeviceService: DeviceServiceProtocol {
     var shouldReturnError = false

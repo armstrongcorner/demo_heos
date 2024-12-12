@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@testable import DemoHeos
 
 class MockShareViewModel: ShareViewModelProtocol {
     var selectedTab: Tab = .room

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@testable import DemoHeos
 
 let mockDevice1: Device = Device(id: 1, name: "Device 1")
 let mockDevice2: Device = Device(id: 2, name: "Device 2")
