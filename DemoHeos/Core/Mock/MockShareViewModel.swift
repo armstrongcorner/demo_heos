@@ -18,6 +18,7 @@ class MockShareViewModel: ShareViewModelProtocol {
     
     func toggleMock(_ newValue: Bool) {
         // Isolate UserDefaults for mock
+        isMock = newValue
         let mockDefaults = UserDefaults(suiteName: "au.com.mydemo.mocks")
         mockDefaults?.set(newValue, forKey: CacheKey.isMock.rawValue)
     }
