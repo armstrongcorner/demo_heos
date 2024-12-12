@@ -14,7 +14,19 @@ struct RoomScreen: View {
     @State private var initialVM: InitialViewModelProtocol
     
     init(initialVM: InitialViewModelProtocol = InitialViewModel()) {
-        self.initialVM = initialVM
+        // For UI testing
+        if ProcessInfo.processInfo.arguments.contains("-isUITesting") {
+            if ProcessInfo.processInfo.arguments.contains("-Room-KeepLoading") {
+                self.initialVM = MockInitialViewModel(shouldKeepLoading: true)
+            } else if ProcessInfo.processInfo.arguments.contains("-Room-WithError") {
+                self.initialVM = MockInitialViewModel(shouldReturnError: true)
+            } else {
+                self.initialVM = MockInitialViewModel()
+            }
+        } else {
+            // For main logic
+            self.initialVM = initialVM
+        }
     }
 
     var body: some View {
@@ -82,6 +94,7 @@ struct RoomScreen: View {
             }
         }
         .tint(.black)
+        .accessibilityIdentifier("RoomScreen")
     }
     
     private func fetchInitData() {

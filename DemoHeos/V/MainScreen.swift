@@ -14,20 +14,17 @@ enum Tab {
 }
 
 struct MainScreen: View {
-    @State private var shareVM: ShareViewModelProtocol
-    @State private var playVM: PlayViewModelProtocol
-    
-    init(
-        shareVM: ShareViewModelProtocol = ShareViewModel(selectedTab: .room, refreshData: true),
-        playVM: PlayViewModelProtocol = PlayViewModel()
-    ) {
-        self.shareVM = shareVM
-        self.playVM = playVM
-    }
-    
+    @Environment(\.shareViewModel) var shareVM: ShareViewModelProtocol
+    @Environment(\.playViewModel) var playVM: PlayViewModelProtocol
+
     var body: some View {
         VStack {
-            TabView(selection: $shareVM.selectedTab) {
+            TabView(selection: Binding(
+                get: { shareVM.selectedTab },
+                set: { newValue in
+                    shareVM.selectedTab = newValue
+                }
+            )) {
                 NowPlayingScreen()
                     .tabItem {
                         Label {
@@ -71,11 +68,13 @@ struct MainScreen: View {
 #Preview("default mock on") {
     let mockShareVM = MockShareViewModel(isMock: true)
     
-    MainScreen(shareVM: mockShareVM)
+    MainScreen()
+        .environment(\.shareViewModel, mockShareVM)
 }
 
 #Preview("default mock off") {
     let mockShareVM = MockShareViewModel(isMock: false)
     
-    MainScreen(shareVM: mockShareVM)
+    MainScreen()
+        .environment(\.shareViewModel, mockShareVM)
 }
