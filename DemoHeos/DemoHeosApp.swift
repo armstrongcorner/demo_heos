@@ -14,13 +14,16 @@ struct DemoHeosApp: App {
     
     init() {
         if ProcessInfo.processInfo.arguments.contains("-isUITesting") {
+            // For UI testing
             self.shareVM = MockShareViewModel(isMock: false)
             self.playVM = PlayViewModel(
                 devices: [mockDevice1, mockDevice2, mockDevice3],
                 selectedDevice: mockDevice1,
-                selectedPlayingItem: mockNowPlayingItem1
+                selectedPlayingItem: mockNowPlayingItem1,
+                showBrief: true
             )
         } else {
+            // For main logic
             self.shareVM = ShareViewModel(selectedTab: .room, refreshData: true)
             self.playVM = PlayViewModel()
         }

@@ -29,6 +29,7 @@ struct SettingScreen: View {
             .navigationBarTitleDisplayMode(.automatic)
         }
         .tint(.black)
+        .accessibilityIdentifier("SettingScreen")
     }
 }
 

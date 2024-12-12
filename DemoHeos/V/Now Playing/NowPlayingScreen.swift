@@ -13,75 +13,82 @@ struct NowPlayingScreen: View {
     @State private var seek: Double = 0
     
     var body: some View {
-        let currentPlayState = playVM.getCurrentPlayState()
-        
-        if currentPlayState != nil {
-            VStack {
-                MyWebImage(imgUrl: playVM.selectedPlayingItem?.artworkLarge)
-                    .frame(width: 300, height: 300)
-                    .cornerRadius(10)
-                
-                Slider(value: $seek, in: 0...100)
-                    .padding(.horizontal, 40)
-                
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text(playVM.selectedPlayingItem?.trackName ?? "")
-                            .font(.title)
-                        Text(playVM.selectedPlayingItem?.artistName ?? "")
+        NavigationView {
+            let currentPlayState = playVM.getCurrentPlayState()
+            
+            if currentPlayState != nil {
+                VStack {
+                    MyWebImage(imgUrl: playVM.selectedPlayingItem?.artworkLarge)
+                        .frame(width: 300, height: 300)
+                        .cornerRadius(10)
+                    
+                    Slider(value: $seek, in: 0...100)
+                        .padding(.horizontal, 40)
+                    
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(playVM.selectedPlayingItem?.trackName ?? "")
+                                .font(.title)
+                            Text(playVM.selectedPlayingItem?.artistName ?? "")
+                        }
+                        
+                        Spacer()
                     }
+                    .padding(.horizontal, 40)
+                    .padding(.top, 10)
+                    
+                    HStack {
+                        Button {
+                            print("Prev clicked")
+                        } label: {
+                            Image(systemName: "backward.end.fill")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                        }
+                        .padding(.trailing, 30)
+                        
+                        Button {
+                            playVM.updateCurrentPlayState(newState: currentPlayState == .playing ? .paused : .playing)
+                        } label: {
+                            Image(currentPlayState == .playing ? "now_playing_controls_pause" : "now_playing_controls_play")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                                .accessibilityLabel(currentPlayState == .playing ? "Pause" : "Play")
+                        }
+                        .padding(.trailing, 30)
+                        .accessibilityIdentifier("PlayPauseButton")
+                        
+                        Button {
+                            print("Prev clicked")
+                        } label: {
+                            Image(systemName: "forward.end.fill")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                        }
+                    }
+                    .padding(.top, 40)
+                    
+                    Text(playVM.selectedDevice?.name ?? "")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.top, 50)
                     
                     Spacer()
                 }
-                .padding(.horizontal, 40)
-                .padding(.top, 10)
-                
-                HStack {
-                    Button {
-                        print("Prev clicked")
-                    } label: {
-                        Image(systemName: "backward.end.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                    }
-                    .padding(.trailing, 30)
-                    
-                    Button {
-                        playVM.updateCurrentPlayState(newState: currentPlayState == .playing ? .paused : .playing)
-                    } label: {
-                        Image(currentPlayState == .playing ? "now_playing_controls_pause" : "now_playing_controls_play")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                    }
-                    .padding(.trailing, 30)
-                    
-                    Button {
-                        print("Prev clicked")
-                    } label: {
-                        Image(systemName: "forward.end.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                    }
+                .onDisappear() {
+                    playVM.showBrief = true
                 }
-                .padding(.top, 40)
-                
-                Text(playVM.selectedDevice?.name ?? "")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .padding(.top, 50)
-                
-                Spacer()
+                .navigationTitle("Now Playing")
+                .navigationBarTitleDisplayMode(.inline)
+                .tint(.black)
+            } else {
+                VStack {
+                    Text("No room selected yet")
+                }
+                .tint(.black)
             }
-            .onDisappear() {
-                playVM.showBrief = true
-            }
-            .tint(.black)
-        } else {
-            VStack {
-                Text("No room selected yet")
-            }
-            .tint(.black)
         }
+        .accessibilityIdentifier("NowPlayingScreen")
     }
 }
 
