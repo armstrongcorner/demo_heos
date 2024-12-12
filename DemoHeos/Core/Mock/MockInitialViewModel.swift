@@ -41,7 +41,6 @@ class MockInitialViewModel: InitialViewModelProtocol {
                 fetchDataState = .error
                 errorMessage = "Mock error occurred"
             } else {
-                print("aaaaaa")
                 if shouldUseMockData {
                     // Mock load from local file
                     devices = [mockDevice1, mockDevice2, mockDevice3]
