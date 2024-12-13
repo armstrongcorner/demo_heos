@@ -32,7 +32,7 @@ final class PlayServiceTests: XCTestCase {
     
     func testGetPlayInfoSuccess() async throws {
         // given
-        mockApiClient.mockResponse = mockResponse
+        await mockApiClient.setMockResponse(mockResponse)
         
         // when
         let result = try await sut.getPlayInfo()
@@ -47,7 +47,7 @@ final class PlayServiceTests: XCTestCase {
     
     func testGetPlayInfoFailure() async throws {
         // given
-        mockApiClient.shouldThrowError = true
+        await mockApiClient.setShouldThrowError(true)
         
         do {
             // when

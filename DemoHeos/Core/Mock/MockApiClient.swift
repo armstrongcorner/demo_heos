@@ -7,11 +7,19 @@
 
 import Foundation
 
-final class MockApiClient: ApiClientProtocol {
+actor MockApiClient: ApiClientProtocol {
     var mockResponse: Decodable?
-    var shouldThrowError = false
+    var shouldThrowError: Bool = false
+    
+    func setMockResponse(_ response: Decodable?) {
+        mockResponse = response
+    }
+    
+    func setShouldThrowError(_ newValue: Bool) {
+        shouldThrowError = newValue
+    }
 
-    func get<T: Decodable>(url: URL, headers: [String: String], body: Data?, responseType: T.Type) async throws -> T {
+    func get<T: Decodable & Sendable>(url: URL, headers: [String: String], body: Data?, responseType: T.Type) async throws -> T {
         if shouldThrowError {
             throw URLError(.badServerResponse)
         }
@@ -21,15 +29,15 @@ final class MockApiClient: ApiClientProtocol {
         return response
     }
 
-    func post<T: Decodable>(url: URL, headers: [String: String], body: Data?, responseType: T.Type) async throws -> T {
+    func post<T: Decodable & Sendable>(url: URL, headers: [String: String], body: Data?, responseType: T.Type) async throws -> T {
         fatalError("Not implemented")
     }
 
-    func put<T: Decodable>(url: URL, headers: [String: String], body: Data?, responseType: T.Type) async throws -> T {
+    func put<T: Decodable & Sendable>(url: URL, headers: [String: String], body: Data?, responseType: T.Type) async throws -> T {
         fatalError("Not implemented")
     }
 
-    func delete<T: Decodable>(url: URL, headers: [String: String], body: Data?, responseType: T.Type) async throws -> T {
+    func delete<T: Decodable & Sendable>(url: URL, headers: [String: String], body: Data?, responseType: T.Type) async throws -> T {
         fatalError("Not implemented")
     }
 }

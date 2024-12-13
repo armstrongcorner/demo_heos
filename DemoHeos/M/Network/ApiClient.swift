@@ -14,9 +14,7 @@ protocol ApiClientProtocol: Sendable {
     func delete<T: Decodable>(url: URL, headers: [String: String], body: Data?, responseType: T.Type) async throws -> T
 }
 
-extension ApiClient: ApiClientProtocol {}
-
-final class ApiClient: Sendable {
+final class ApiClient: ApiClientProtocol {
     static let shared = ApiClient()
     
     private init() {}

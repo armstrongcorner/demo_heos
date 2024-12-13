@@ -32,7 +32,7 @@ final class DeviceServiceTests: XCTestCase {
 
     func testGetDeviceInfoSuccess() async throws {
         // given
-        mockApiClient.mockResponse = mockResponse
+        await mockApiClient.setMockResponse(mockResponse)
 
         // when
         let result = try await sut.getDeviceInfo()
@@ -46,7 +46,7 @@ final class DeviceServiceTests: XCTestCase {
 
     func testGetDeviceInfoFailure() async throws {
         // given
-        mockApiClient.shouldThrowError = true
+        await mockApiClient.setShouldThrowError(true)
 
         do {
             // when
