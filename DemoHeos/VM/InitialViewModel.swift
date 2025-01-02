@@ -31,7 +31,7 @@ extension InitialViewModelProtocol {
 }
 
 @Observable @MainActor
-final class InitialViewModel: ObservableObject, InitialViewModelProtocol {
+final class InitialViewModel: InitialViewModelProtocol {
     var devices: [Device]
     var playingItems: [NowPlayingItem]
     var errorMessage: String?
