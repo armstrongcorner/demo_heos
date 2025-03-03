@@ -106,7 +106,7 @@ final class InitialViewModel: InitialViewModelProtocol {
                 
                 fetchDataState = .done
             } catch {
-                appendError("Data fetch failed: \(error.localizedDescription)")
+//                appendError("Data fetch failed: \(error.localizedDescription)")
                 fetchDataState = .error
             }
         }

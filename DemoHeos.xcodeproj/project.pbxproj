@@ -133,8 +133,8 @@
 		221333B72D2FB57C00582A60 /* Mock */ = {
 			isa = PBXGroup;
 			children = (
-				221333B02D2FB57C00582A60 /* MockApiClient.swift */,
 				221333B12D2FB57C00582A60 /* MockData.swift */,
+				221333B02D2FB57C00582A60 /* MockApiClient.swift */,
 				221333B22D2FB57C00582A60 /* MockDeviceService.swift */,
 				221333B32D2FB57C00582A60 /* MockFileService.swift */,
 				221333B42D2FB57C00582A60 /* MockInitialViewModel.swift */,
